@@ -32,7 +32,7 @@ export default function ManageCoursePreviewPage({isAdmin = true}) {
                     </Link>
                     <div className="flex flex-col gap-4">
                         <div className="flex shrink-0 w-[130px] h-[100px] rounded-[14px] bg-[#D9D9D9] overflow-hidden">
-                            <img src="/assets/images/thumbnails/th-1.png" className="w-full h-full object-cover" alt="thumbnail"/>
+                            <img src={`${course?.thumbnail}`} className="w-full h-full object-cover" alt="thumbnail"/>
                         </div>
                         <h2 className="font-bold text-xl leading-[34px] text-white">{course?.name}</h2>
                     </div>
