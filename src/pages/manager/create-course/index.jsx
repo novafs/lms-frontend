@@ -2,32 +2,42 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLoaderData, useNavigate, useParams } from "react-router-dom";
-import { createCourseSchema, updateCourseSchema } from "../../../utils/zodSchema";
+import {
+  createCourseSchema,
+  updateCourseSchema,
+} from "../../../utils/zodSchema";
 import { useMutation } from "@tanstack/react-query";
 import { createCourse, updateCourse } from "../../../services/courseService";
 
 export default function ManageCreateCoursePage() {
   const data = useLoaderData();
-  const {id} = useParams()
-  
+  const { id } = useParams();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
   } = useForm({
-    resolver: zodResolver(data?.course === null ? createCourseSchema : updateCourseSchema),
+    resolver: zodResolver(
+      data?.course === null ? createCourseSchema : updateCourseSchema
+    ),
     defaultValues: {
-        name: data?.course?.name,
-        tagline: data?.course?.tagline,
-        categoryId: data?.course?.category,
-        description: data?.course?.description
-    }
+      name: data?.course?.name,
+      tagline: data?.course?.tagline,
+      categoryId: data?.course?.category,
+      description: data?.course?.description,
+    },
   });
 
   const [file, setFile] = useState(null);
   const inputFileRef = useRef(null);
   const navigate = useNavigate();
+
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const mutateCreate = useMutation({
     mutationFn: (data) => createCourse(data),
@@ -35,7 +45,7 @@ export default function ManageCreateCoursePage() {
 
   const mutateUpdate = useMutation({
     mutationFn: (data) => updateCourse(data, id),
-  })
+  });
 
   const onSubmit = async (values) => {
     console.log(data);
@@ -49,9 +59,9 @@ export default function ManageCreateCoursePage() {
       formData.append("description", values.description);
 
       if (data.course === null) {
-        await mutateCreate.mutateAsync(formData)
-    } else {
-          await mutateUpdate.mutateAsync(formData)
+        await mutateCreate.mutateAsync(formData);
+      } else {
+        await mutateUpdate.mutateAsync(formData);
       }
       navigate("/manager/courses");
     } catch (error) {
@@ -125,14 +135,14 @@ export default function ManageCreateCoursePage() {
               />
               <span className="text-[#838C9D]">Add an attachment</span>
             </button>
-            <img
-              id="thumbnail-preview"
-              src={file !== null ? URL.createObjectURL(file) : ""}
-              className={`w-full h-full object-cover ${
-                file !== null ? "block" : "hidden"
-              }`}
-              alt="thumbnail"
-            />
+            {isMounted && file !== null && (
+              <img
+                id="thumbnail-preview"
+                src={URL.createObjectURL(file)}
+                className="w-full h-full object-cover block"
+                alt="thumbnail"
+              />
+            )}
             <button
               type="button"
               id="delete-preview"
@@ -249,7 +259,11 @@ export default function ManageCreateCoursePage() {
           </button>
           <button
             type="submit"
-            disabled={data?.course === null ? mutateCreate.isLoading : mutateUpdate.isLoading}
+            disabled={
+              data?.course === null
+                ? mutateCreate.isLoading
+                : mutateUpdate.isLoading
+            }
             className="w-full rounded-full p-[14px_20px] font-semibold text-[#FFFFFF] bg-[#662FFF] text-nowrap"
           >
             Create Now
