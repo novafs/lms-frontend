@@ -26,7 +26,7 @@ export default function ManageCoursesPage() {
             </header>
             <section id="CourseList" className="flex flex-col w-full rounded-[30px] p-[30px] gap-[30px] bg-[#F8FAFB]">
                 {Courses?.data?.map((item) => (
-                    <CourseCard key={item._id} category={item.category.name} id={item._id} imageUrl={item.thumbnail_url} name={item.name} totalStudents={item.totalStudents}/>
+                    <CourseCard key={item._id} category={item.category.name} id={item._id} imageUrl={item.thumbnail} name={item.name} totalStudents={item.totalStudents}/>
                 ))}
                 {/* <div id="Pagination" className="flex items-center gap-3">
                     <button type="button" className="flex shrink-0 w-9 h-9 rounded-full items-center justify-center text-center transition-all duration-300 hover:bg-[#662FFF] hover:text-white hover:border-0 bg-[#662FFF] text-white">
